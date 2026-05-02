@@ -1,0 +1,39 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  background-color: rgb(0 0 0 / 60%);
+
+  @media (height <= 500px) {
+    justify-content: inherit;
+  }
+}
+
+.modal {
+  width: 720px;
+  padding: 40px;
+  background-color: rgb(28 28 33 / 100%);
+  border-radius: 40px;
+}
+
+.header {
+  position: relative;
+  padding-right: 25px;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.content {
+  overflow-y: auto;
+}
