@@ -1,5 +1,5 @@
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { IngredientCard } from '@components/ingredient-card/ingredient-card.tsx';
 
@@ -37,6 +37,18 @@ export const BurgerIngredients = ({
     });
   };
 
+  const buns = useMemo(() => {
+    return ingredients.filter((item) => item.type === 'bun');
+  }, [ingredients]);
+
+  const mains = useMemo(() => {
+    return ingredients.filter((item) => item.type === 'main');
+  }, [ingredients]);
+
+  const sauces = useMemo(() => {
+    return ingredients.filter((item) => item.type === 'sauce');
+  }, [ingredients]);
+
   return (
     <section className={styles.burger_ingredients}>
       <nav>
@@ -59,39 +71,33 @@ export const BurgerIngredients = ({
           Булки
         </h3>
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {ingredients
-            .filter((item) => item.type === 'bun')
-            .map((ingredient) => (
-              <li key={ingredient._id}>
-                <IngredientCard count={1} ingredientData={ingredient} />
-              </li>
-            ))}
+          {buns.map((ingredient) => (
+            <li key={ingredient._id}>
+              <IngredientCard count={1} ingredientData={ingredient} />
+            </li>
+          ))}
         </ul>
 
         <h3 ref={main} className="text text_type_main-medium mt-10 mb-6">
           Начинки
         </h3>
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {ingredients
-            .filter((item) => item.type === 'main')
-            .map((ingredient) => (
-              <li key={ingredient._id}>
-                <IngredientCard count={1} ingredientData={ingredient} />
-              </li>
-            ))}
+          {mains.map((ingredient) => (
+            <li key={ingredient._id}>
+              <IngredientCard count={1} ingredientData={ingredient} />
+            </li>
+          ))}
         </ul>
 
         <h3 ref={sauce} className="text text_type_main-medium mt-10 mb-6">
           Соусы
         </h3>
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {ingredients
-            .filter((item) => item.type === 'sauce')
-            .map((ingredient) => (
-              <li key={ingredient._id}>
-                <IngredientCard count={1} ingredientData={ingredient} />
-              </li>
-            ))}
+          {sauces.map((ingredient) => (
+            <li key={ingredient._id}>
+              <IngredientCard count={1} ingredientData={ingredient} />
+            </li>
+          ))}
         </ul>
       </div>
     </section>
