@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   max-width: 600px;
+  padding-bottom: 20px;
   color: var(--text-primary-color);
   font-family: 'Jet Brains Mono', serif;
 }
@@ -12,4 +13,14 @@
   padding: 0;
   text-align: center;
   list-style-type: none;
+}
+
+.ingredients {
+  overflow-y: auto;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  list-style: none;
 }

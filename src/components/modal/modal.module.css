@@ -1,0 +1,30 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1070;
+  max-width: 720px;
+  height: fit-content;
+  margin: auto;
+  padding: 40px;
+  background-color: rgb(28 28 33 / 100%);
+  border-radius: 40px;
+}
+
+.header {
+  position: relative;
+  padding-right: 25px;
+}
+
+.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto 0;
+  cursor: pointer;
+}
+
+.content {
+  max-height: fit-content;
+  overflow-y: auto;
+}
