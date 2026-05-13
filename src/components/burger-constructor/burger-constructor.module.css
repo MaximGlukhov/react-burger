@@ -10,6 +10,7 @@
 .list {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   gap: 16px;
   margin: 0;
   padding: 0;
@@ -22,4 +23,36 @@
   justify-content: flex-end;
   align-items: center;
   gap: 40px;
+}
+
+.emptyItem {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 536px;
+  min-height: 80px;
+  padding: 16px 24px;
+  color: #f2f2f3;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  background: var(--background-element);
+  border-radius: var(--common-border-radius-s);
+}
+
+.emptyItemNotFilling {
+  order: 2;
+}
+
+.emptyItemTop {
+  order: 1;
+  border-radius: var(--top-constructor-item-border-radius);
+}
+
+.emptyItemBottom {
+  order: 2;
+  border-radius: var(--bottom-constructor-item-border-radius);
 }
