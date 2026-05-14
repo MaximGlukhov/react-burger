@@ -7,6 +7,12 @@
   color: var(--text-primary-color);
 }
 
+.loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
 .list {
   display: flex;
   flex-direction: column;

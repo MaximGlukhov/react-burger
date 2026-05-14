@@ -2,11 +2,16 @@ import { useDispatch, useSelector } from '@/services/hooks';
 import { useSubmitOrderMutation } from '@/services/slices/api/api';
 import {
   addIngredient,
+  clearIngredients,
   getConstructorIngredients,
   getConstructorSum,
   setOrderData,
 } from '@/services/slices/burger-constructor/burger-constructor-slice';
-import { Button, CurrencyIcon } from '@krgaa/react-developer-burger-ui-components';
+import {
+  Button,
+  CurrencyIcon,
+  Preloader,
+} from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
@@ -52,6 +57,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
       .then((data) => {
         setopenModal(true);
         dispatch(setOrderData({ order: data.order.number, name: data.name }));
+        dispatch(clearIngredients());
       })
       .catch((err) => console.warn(err));
   };
@@ -61,6 +67,12 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
   return (
     <>
+      {isLoading && (
+        <div className={styles.loader}>
+          <Preloader />
+        </div>
+      )}
+
       <section className={`${styles.burger_constructor} ml-10`}>
         <ul
           ref={(node) => {
@@ -132,7 +144,11 @@ export const BurgerConstructor = (): React.JSX.Element => {
             {sum} <CurrencyIcon type="primary" />
           </div>
           <Button
-            disabled={isLoading || constructorIngredients.length < 3}
+            disabled={
+              isLoading ||
+              constructorIngredients.length < 3 ||
+              !constructorIngredients.some((item) => item.type === 'bun')
+            }
             onClick={handleSubmitOrder}
             htmlType={'button'}
           >

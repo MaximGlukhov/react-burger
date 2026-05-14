@@ -1,20 +1,15 @@
+import { useGetIngredientsQuery } from '@/services/slices/api/api';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { IngredientCard } from '@components/ingredient-card/ingredient-card.tsx';
 
-import type { TIngredient } from '@utils/types';
 import type React from 'react';
 
 import styles from './burger-ingredients.module.css';
 
-type TBurgerIngredientsProps = {
-  ingredients: TIngredient[];
-};
-
-export const BurgerIngredients = ({
-  ingredients,
-}: TBurgerIngredientsProps): React.JSX.Element => {
+export const BurgerIngredients = (): React.JSX.Element => {
+  const { data: ingredients } = useGetIngredientsQuery();
   const [activeTab, setActiveTab] = useState('bun');
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,15 +80,15 @@ export const BurgerIngredients = ({
   }, []);
 
   const buns = useMemo(() => {
-    return ingredients.filter((item) => item.type === 'bun');
+    return ingredients?.data.filter((item) => item.type === 'bun');
   }, [ingredients]);
 
   const mains = useMemo(() => {
-    return ingredients.filter((item) => item.type === 'main');
+    return ingredients?.data.filter((item) => item.type === 'main');
   }, [ingredients]);
 
   const sauces = useMemo(() => {
-    return ingredients.filter((item) => item.type === 'sauce');
+    return ingredients?.data.filter((item) => item.type === 'sauce');
   }, [ingredients]);
 
   return (
@@ -120,7 +115,7 @@ export const BurgerIngredients = ({
         </h3>
 
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {buns.map((ingredient) => (
+          {buns?.map((ingredient) => (
             <li key={ingredient._id}>
               <IngredientCard ingredientData={ingredient} />
             </li>
@@ -132,7 +127,7 @@ export const BurgerIngredients = ({
         </h3>
 
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {mains.map((ingredient) => (
+          {mains?.map((ingredient) => (
             <li key={ingredient._id}>
               <IngredientCard ingredientData={ingredient} />
             </li>
@@ -144,7 +139,7 @@ export const BurgerIngredients = ({
         </h3>
 
         <ul className={`${styles.list} pl-4 pr-4`}>
-          {sauces.map((ingredient) => (
+          {sauces?.map((ingredient) => (
             <li key={ingredient._id}>
               <IngredientCard ingredientData={ingredient} />
             </li>

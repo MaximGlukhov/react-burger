@@ -20,7 +20,7 @@ export const App = (): React.JSX.Element => {
       {isError && <p>Ошибка получения данных</p>}
       {!isLoading && ingredients && (
         <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients ingredients={ingredients.data} />
+          <BurgerIngredients />
           <BurgerConstructor />
         </main>
       )}

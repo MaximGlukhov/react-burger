@@ -28,37 +28,65 @@ export const burgerConstructorSlice = createSlice({
   initialState,
 
   reducers: {
-    addIngredient(state, action: PayloadAction<TIngredient>) {
-      if (action.payload.type === 'bun') {
-        const bunTop = {
-          ...action.payload,
-          uniqId: nanoid(),
-        };
-
-        const bunBottom = {
-          ...action.payload,
-          uniqId: nanoid(),
-        };
-
-        const middleIngredients = state.ingredients.filter(
-          (item) => item.type !== 'bun'
-        );
-
-        state.ingredients = [bunTop, ...middleIngredients, bunBottom];
-      } else {
-        const hasBun = state.ingredients.some((item) => item.type === 'bun');
-
-        const ingredient = {
-          ...action.payload,
-          uniqId: nanoid(),
-        };
-
-        if (hasBun) {
-          state.ingredients.splice(state.ingredients.length - 1, 0, ingredient);
-        } else {
-          state.ingredients.push(ingredient);
+    addIngredient: {
+      prepare(ingredient: TIngredient) {
+        if (ingredient.type === 'bun') {
+          return {
+            payload: {
+              type: 'bun' as const,
+              bunTop: {
+                ...ingredient,
+                uniqId: nanoid(),
+              },
+              bunBottom: {
+                ...ingredient,
+                uniqId: nanoid(),
+              },
+            },
+          };
         }
-      }
+
+        return {
+          payload: {
+            type: 'ingredient' as const,
+            ingredient: {
+              ...ingredient,
+              uniqId: nanoid(),
+            },
+          },
+        };
+      },
+      reducer(
+        state,
+        action: PayloadAction<
+          | {
+              type: 'bun';
+              bunTop: TUniqIngredient;
+              bunBottom: TUniqIngredient;
+            }
+          | {
+              type: 'ingredient';
+              ingredient: TUniqIngredient;
+            }
+        >
+      ) {
+        if (action.payload.type === 'bun') {
+          const { bunTop, bunBottom } = action.payload;
+          const middleIngredients = state.ingredients.filter(
+            (item) => item.type !== 'bun'
+          );
+          state.ingredients = [bunTop, ...middleIngredients, bunBottom];
+        } else {
+          const { ingredient } = action.payload;
+          const hasBun = state.ingredients.some((item) => item.type === 'bun');
+
+          if (hasBun) {
+            state.ingredients.splice(state.ingredients.length - 1, 0, ingredient);
+          } else {
+            state.ingredients.push(ingredient);
+          }
+        }
+      },
     },
 
     moveIngredient: (
@@ -96,6 +124,10 @@ export const burgerConstructorSlice = createSlice({
       );
     },
 
+    clearIngredients(state) {
+      state.ingredients = [];
+    },
+
     setOrderData(state, action: PayloadAction<{ order: number; name: string }>) {
       state.burgerName = action.payload.name;
       state.order = action.payload.order;
@@ -109,8 +141,13 @@ export const burgerConstructorSlice = createSlice({
   },
 });
 
-export const { addIngredient, removeIngredient, moveIngredient, setOrderData } =
-  burgerConstructorSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  moveIngredient,
+  setOrderData,
+  clearIngredients,
+} = burgerConstructorSlice.actions;
 
 export const { getConstructorIngredients, getOrderNumber, getBurgerName } =
   burgerConstructorSlice.selectors;
