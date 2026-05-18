@@ -1,4 +1,4 @@
-import { useGetIngredients } from '@/hooks/useGetIngredients';
+import { useGetIngredientsQuery } from '@/services/slices/api/api';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
 
 import { AppHeader } from '@components/app-header/app-header';
@@ -8,7 +8,7 @@ import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredi
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const [ingredients, error, loading] = useGetIngredients();
+  const { data: ingredients, isLoading, isError } = useGetIngredientsQuery();
 
   return (
     <div className={styles.app}>
@@ -16,12 +16,12 @@ export const App = (): React.JSX.Element => {
       <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
         Соберите бургер
       </h1>
-      {loading && <Preloader />}
-      {error && error}
-      {!loading && ingredients && (
+      {isLoading && <Preloader />}
+      {isError && <p>Ошибка получения данных</p>}
+      {!isLoading && ingredients && (
         <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients ingredients={ingredients} />
-          <BurgerConstructor sum={0} ingredients={ingredients} />
+          <BurgerIngredients />
+          <BurgerConstructor />
         </main>
       )}
     </div>
