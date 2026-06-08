@@ -1,29 +1,28 @@
-import { useGetIngredientsQuery } from '@/services/slices/api/api';
+import { useGetUserQuery } from '@/services/slices/api/authApi';
 import { Preloader } from '@krgaa/react-developer-burger-ui-components';
+import { Outlet } from 'react-router-dom';
 
 import { AppHeader } from '@components/app-header/app-header';
-import { BurgerConstructor } from '@components/burger-constructor/burger-constructor';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients';
 
 import styles from './app.module.css';
 
 export const App = (): React.JSX.Element => {
-  const { data: ingredients, isLoading, isError } = useGetIngredientsQuery();
+  const token = localStorage.getItem('accessToken');
+
+  const { isLoading } = useGetUserQuery(undefined, {
+    skip: !token,
+  });
+
+  if (isLoading) {
+    return <Preloader />;
+  }
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <h1 className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-        Соберите бургер
-      </h1>
-      {isLoading && <Preloader />}
-      {isError && <p>Ошибка получения данных</p>}
-      {!isLoading && ingredients && (
-        <main className={`${styles.main} pl-5 pr-5`}>
-          <BurgerIngredients />
-          <BurgerConstructor />
-        </main>
-      )}
+      <main className={`${styles.main} pl-5 pr-5`}>
+        <Outlet />
+      </main>
     </div>
   );
 };

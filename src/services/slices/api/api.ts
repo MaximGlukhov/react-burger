@@ -1,9 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithRefresh } from '@/utils/api';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 import type { TUniqIngredient } from '../burger-constructor/burger-constructor-slice';
 import type { TIngredient } from '@/utils/types';
 
-type submitOrderResponse = {
+type SubmitOrderResponse = {
   name: string;
   order: { number: number };
   number: number;
@@ -12,7 +13,7 @@ type submitOrderResponse = {
 
 export const rootApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
+  baseQuery: baseQueryWithRefresh({
     baseUrl: 'https://new-stellarburgers.education-services.ru/api/',
   }),
   endpoints: (build) => ({
@@ -25,13 +26,14 @@ export const rootApi = createApi({
       },
     }),
 
-    submitOrder: build.mutation<submitOrderResponse, TUniqIngredient[]>({
+    submitOrder: build.mutation<SubmitOrderResponse, TUniqIngredient[]>({
       query: (ingredients) => {
         return {
           url: 'orders',
           method: 'POST',
           body: {
             ingredients: ingredients.map((item) => item._id),
+            authorization: localStorage.getItem('accessToken'),
           },
         };
       },

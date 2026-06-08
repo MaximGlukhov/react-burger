@@ -1,0 +1,39 @@
+.section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 320px 480px;
+  gap: 60px;
+  max-width: 860px;
+}
+
+.menu {
+  height: 100%;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.link {
+  padding: 0;
+  color: var(--text-inactive-color);
+  font-weight: 700;
+  font-size: 24px;
+  text-align: left;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.link_active {
+  color: var(--text-primary-color);
+}

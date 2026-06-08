@@ -1,6 +1,7 @@
 import { useGetIngredientsQuery } from '@/services/slices/api/api';
 import { Tab } from '@krgaa/react-developer-burger-ui-components';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 
 import { IngredientCard } from '@components/ingredient-card/ingredient-card.tsx';
 
@@ -146,6 +147,8 @@ export const BurgerIngredients = (): React.JSX.Element => {
           ))}
         </ul>
       </div>
+
+      <Outlet />
     </section>
   );
 };

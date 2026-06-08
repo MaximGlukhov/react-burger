@@ -1,0 +1,31 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+
+  button {
+    width: fit-content;
+    margin: 0 auto;
+  }
+}
+
+.footer {
+  margin-top: 80px;
+}
+
+.footerWrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

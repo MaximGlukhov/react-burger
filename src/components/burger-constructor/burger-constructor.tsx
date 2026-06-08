@@ -7,6 +7,7 @@ import {
   getConstructorSum,
   setOrderData,
 } from '@/services/slices/burger-constructor/burger-constructor-slice';
+import { getUser } from '@/services/slices/user/user';
 import {
   Button,
   CurrencyIcon,
@@ -14,6 +15,7 @@ import {
 } from '@krgaa/react-developer-burger-ui-components';
 import { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { useNavigate } from 'react-router-dom';
 
 import { ConstructorItem } from '../constructor-item/constructor-item';
 import { Modal } from '../modal/modal';
@@ -27,8 +29,10 @@ export const BurgerConstructor = (): React.JSX.Element => {
   const [openModal, setopenModal] = useState(false);
   const [submitOrder, { isLoading }] = useSubmitOrderMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const constructorIngredients = useSelector(getConstructorIngredients);
   const sum = useSelector(getConstructorSum);
+  const user = useSelector(getUser);
 
   const [{ isHover, draggedItem }, drop] = useDrop({
     accept: 'ingredient',
@@ -52,14 +56,18 @@ export const BurgerConstructor = (): React.JSX.Element => {
   })) as unknown as [{ isDragging: boolean }, React.RefCallback<HTMLElement>];
 
   const handleSubmitOrder = (): void => {
-    submitOrder(constructorIngredients)
-      .unwrap()
-      .then((data) => {
-        setopenModal(true);
-        dispatch(setOrderData({ order: data.order.number, name: data.name }));
-        dispatch(clearIngredients());
-      })
-      .catch((err) => console.warn(err));
+    if (user) {
+      submitOrder(constructorIngredients)
+        .unwrap()
+        .then((data) => {
+          setopenModal(true);
+          dispatch(setOrderData({ order: data.order.number, name: data.name }));
+          dispatch(clearIngredients());
+        })
+        .catch((err) => console.warn(err));
+    } else {
+      void navigate('/login');
+    }
   };
 
   const hasBuns = constructorIngredients.some((item) => item.type === 'bun');
