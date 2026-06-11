@@ -4,9 +4,14 @@ import {
   removeIngredient,
   type TUniqIngredient,
 } from '@/services/slices/burger-constructor/burger-constructor-slice';
-import { ConstructorElement } from '@krgaa/react-developer-burger-ui-components';
+import {
+  ConstructorElement,
+  DragIcon,
+} from '@krgaa/react-developer-burger-ui-components';
 import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+
+import styles from './constuctor-element.module.css';
 
 type TConstructorItemProps = {
   ingredient: TUniqIngredient;
@@ -67,12 +72,14 @@ export const ConstructorItem = ({
   return (
     <li
       ref={ref}
+      className={styles.item}
       style={{
         opacity: isDragging ? 0.5 : 1,
         order: order,
         cursor: ingredient.type !== 'bun' ? 'grab' : 'default',
       }}
     >
+      {ingredient.type !== 'bun' && <DragIcon type={'primary'} />}
       <ConstructorElement
         handleClose={() => dispatch(removeIngredient(ingredient))}
         isLocked={ingredient.type === 'bun'}

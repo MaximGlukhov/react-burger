@@ -72,6 +72,8 @@ export const burgerConstructorSlice = createSlice({
       ) {
         if (action.payload.type === 'bun') {
           const { bunTop, bunBottom } = action.payload;
+          bunTop.name = `${bunTop.name} (верх)`;
+          bunBottom.name = `${bunBottom.name} (низ)`;
           const middleIngredients = state.ingredients.filter(
             (item) => item.type !== 'bun'
           );

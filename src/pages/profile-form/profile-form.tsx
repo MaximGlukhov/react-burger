@@ -1,3 +1,4 @@
+import { useSelector } from '@/services/hooks';
 import { useUpdateUserMutation } from '@/services/slices/api/authApi';
 import { getUser } from '@/services/slices/user/user';
 import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
@@ -8,7 +9,6 @@ import {
   type ChangeEvent,
   type FormEventHandler,
 } from 'react';
-import { useSelector } from 'react-redux';
 
 import styles from './profile-form.module.css';
 

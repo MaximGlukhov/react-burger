@@ -42,6 +42,19 @@ export const routes = createBrowserRouter([
             Component: LoginPage,
             path: 'login',
           },
+          {
+            Component: ForgotPasswordPage,
+            path: 'forgot-password',
+          },
+          {
+            element: <ResetPasswordGuard />,
+            children: [
+              {
+                path: 'reset-password',
+                Component: ResetPasswordPage,
+              },
+            ],
+          },
         ],
       },
 
@@ -59,19 +72,6 @@ export const routes = createBrowserRouter([
               {
                 path: 'orders',
                 Component: ProfileOrderPage,
-              },
-            ],
-          },
-          {
-            Component: ForgotPasswordPage,
-            path: 'forgot-password',
-          },
-          {
-            element: <ResetPasswordGuard />,
-            children: [
-              {
-                path: 'reset-password',
-                Component: ResetPasswordPage,
               },
             ],
           },
