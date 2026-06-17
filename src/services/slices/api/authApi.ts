@@ -1,4 +1,5 @@
 import { baseQueryWithRefresh } from '@/utils/api';
+import { BASE_URL } from '@/utils/const';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { setUser } from '../user/user';
@@ -52,7 +53,7 @@ type TRefreshResponse = {
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithRefresh({
-    baseUrl: 'https://new-stellarburgers.education-services.ru/api/',
+    baseUrl: BASE_URL,
   }),
   endpoints: (builder) => ({
     login: builder.mutation<TUser, TLoginCredentials>({

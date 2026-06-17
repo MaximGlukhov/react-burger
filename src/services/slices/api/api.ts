@@ -1,4 +1,5 @@
 import { baseQueryWithRefresh } from '@/utils/api';
+import { BASE_URL } from '@/utils/const';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import type { TUniqIngredient } from '../burger-constructor/burger-constructor-slice';
@@ -14,7 +15,7 @@ type SubmitOrderResponse = {
 export const rootApi = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithRefresh({
-    baseUrl: 'https://new-stellarburgers.education-services.ru/api/',
+    baseUrl: BASE_URL,
   }),
   endpoints: (build) => ({
     getIngredients: build.query<{ data: TIngredient[]; success: boolean }, void>({
