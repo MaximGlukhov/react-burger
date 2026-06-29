@@ -1,5 +1,10 @@
 import { useDispatch, useSelector } from '@/services/hooks';
-import { useGetIngredientsQuery, useGetOrdersQuery } from '@/services/slices/api/api';
+import {
+  useGetHistoryOrdersQuery,
+  useGetIngredientsQuery,
+  useGetOrdersQuery,
+  useGetOrderByIdQuery,
+} from '@/services/slices/api/api';
 import {
   getOpenModal,
   getOrderDetail,
@@ -10,28 +15,41 @@ import {
   CurrencyIcon,
   FormattedDate,
 } from '@krgaa/react-developer-burger-ui-components';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Modal } from '../modal/modal';
 
+import type { TOrederTransform, TOrder } from '@/utils/types';
+
 import styles from './order-modal.module.css';
 
-export const OrderModal = (): React.JSX.Element | null => {
+type TOrderModalProps = {
+  back: string;
+};
+
+export const OrderModal = ({ back }: TOrderModalProps): React.JSX.Element | null => {
+  const { id } = useParams();
+  const skipOrderId = useRef(true);
+
   const { data: ordersData } = useGetOrdersQuery();
+  const { data: historyOrdersData } = useGetHistoryOrdersQuery();
   const { data: ingredientsData } = useGetIngredientsQuery();
+  const { data: orderId, isFetching } = useGetOrderByIdQuery(id ?? '', {
+    skip: skipOrderId.current,
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const openModal = useSelector(getOpenModal);
   const order = useSelector(getOrderDetail);
-  const { id } = useParams();
 
   const hideModal = (): void => {
     dispatch(setOpenModal(false));
     dispatch(setOrderDetail(null));
-    void navigate(-1);
+    skipOrderId.current = true;
+    void navigate(back);
   };
 
   const ingredientsMap = useMemo(
@@ -42,9 +60,10 @@ export const OrderModal = (): React.JSX.Element | null => {
     [ingredientsData]
   );
 
-  const totalPrice = order?.ingredients.reduce((sum, ing) => {
-    return sum + ing.price * ing.count;
-  }, 0);
+  const totalPrice = order?.ingredients.reduce(
+    (sum, ing) => sum + ing.price * ing.count,
+    0
+  );
 
   const statusText =
     order?.status === 'done'
@@ -54,40 +73,55 @@ export const OrderModal = (): React.JSX.Element | null => {
         : 'В работе';
 
   useEffect(() => {
-    const transformOrders = ordersData?.orders.map((item) => {
-      const counts = item.ingredients.reduce(
-        (acc, id) => {
-          acc[id] = (acc[id] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
+    if (id && ordersData && historyOrdersData && ingredientsData && ingredientsMap) {
+      const allOrders: TOrder[] = [
+        ...(ordersData?.orders ?? []),
+        ...(historyOrdersData?.orders ?? []),
+      ];
 
-      return {
-        ...item,
-        ingredients: Object.entries(counts).map(([id, count]) => ({
-          ...ingredientsMap[id],
-          count,
-        })),
+      const transformOrder = (item: TOrder): TOrederTransform => {
+        const counts = item.ingredients.reduce(
+          (acc: Record<string, number>, ingredientId: string) => {
+            acc[ingredientId] = (acc[ingredientId] ?? 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        return {
+          ...item,
+          ingredients: Object.entries(counts).map(([ingredientId, count]) => ({
+            ...(ingredientsMap[ingredientId] ?? {}),
+            count,
+          })),
+        } as TOrederTransform;
       };
-    });
 
-    const findOrder = transformOrders?.find((item) => item._id === id);
+      const found = allOrders.find((o) => o._id === id);
 
-    if (!findOrder) return;
-
-    dispatch(setOrderDetail(findOrder));
-    dispatch(setOpenModal(true));
-  }, [dispatch, id, ingredientsMap, ordersData]);
+      if (found) {
+        dispatch(setOrderDetail(transformOrder(found)));
+        dispatch(setOpenModal(true));
+      } else {
+        dispatch(setOpenModal(true));
+        skipOrderId.current = false;
+        if (orderId) {
+          const transformed = transformOrder(orderId.order);
+          dispatch(setOrderDetail(transformed));
+        }
+      }
+    }
+  }, [ordersData, historyOrdersData, skipOrderId]);
 
   if (!openModal || !order) return null;
 
   return (
     <Modal closePopup={hideModal}>
+      {isFetching && <>Loading</>}
       <h2 className="text text_type_digits-default mb-10">#{order?.number}</h2>
 
       <p className="text text_type_main-medium mb-3">{order?.name}</p>
-      <p className="text text_type_main-default mb-15">{statusText}</p>
+      <p className="text text_type_main-default mb-15 green-text">{statusText}</p>
       <p className="text text_type_main-medium mb-6">Состав:</p>
       <ul className={`custom-scroll ${styles.list}`}>
         {order?.ingredients.map((item) => (

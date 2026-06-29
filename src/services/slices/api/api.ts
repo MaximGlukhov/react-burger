@@ -18,7 +18,13 @@ type OrderMessage = {
   totalToday: number;
 };
 
+type OrderByIdResponse = {
+  order: TOrder;
+  success: boolean;
+};
+
 let socket: WebSocket | null = null;
+let historySocket: WebSocket | null = null;
 
 export const rootApi = createApi({
   reducerPath: 'api',
@@ -109,9 +115,66 @@ export const rootApi = createApi({
       },
     }),
 
+    getOrderById: build.query<OrderByIdResponse, string>({
+      query: (id) => {
+        return {
+          url: `orders/${id}`,
+          method: 'GET',
+        };
+      },
+    }),
+
     getHistoryOrders: build.query<OrderMessage, void>({
       query: () => {
         return { url: 'orders' };
+      },
+
+      async onCacheEntryAdded(_arg, api) {
+        let isActive = true;
+
+        const connect = (): void => {
+          if (!isActive) return;
+
+          const accessToken = localStorage
+            .getItem('accessToken')
+            ?.replace('Bearer ', '');
+
+          if (!accessToken) return;
+
+          historySocket = new WebSocket(
+            `wss://new-stellarburgers.education-services.ru/orders?token=${accessToken}`
+          );
+
+          historySocket.addEventListener('message', (event) => {
+            if (typeof event.data !== 'string') return;
+
+            const message = JSON.parse(event.data) as OrderMessage;
+
+            api.updateCachedData((draft) => {
+              Object.assign(draft, message);
+            });
+          });
+
+          historySocket.addEventListener('error', (error) => {
+            console.error('History WebSocket error:', error);
+            historySocket?.close();
+          });
+
+          historySocket.addEventListener('close', () => {
+            console.log('History WebSocket closed');
+          });
+        };
+
+        try {
+          await api.cacheDataLoaded;
+
+          connect();
+
+          await api.cacheEntryRemoved;
+        } finally {
+          isActive = false;
+          historySocket?.close();
+        }
       },
     }),
   }),
@@ -120,6 +183,8 @@ export const rootApi = createApi({
 export const {
   useGetIngredientsQuery,
   useSubmitOrderMutation,
+  useGetOrderByIdQuery,
+  useLazyGetOrderByIdQuery,
   useGetOrdersQuery,
   useGetHistoryOrdersQuery,
 } = rootApi;

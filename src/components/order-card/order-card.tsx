@@ -13,9 +13,10 @@ import styles from './order-card.module.css';
 
 type TOrderCardProps = {
   order: TOrder;
+  status: boolean;
 };
 
-export const OrderCard = ({ order }: TOrderCardProps): React.JSX.Element => {
+export const OrderCard = ({ order, status }: TOrderCardProps): React.JSX.Element => {
   const dispatch = useDispatch();
 
   const { data: ingredients } = useGetIngredientsQuery();
@@ -46,6 +47,13 @@ export const OrderCard = ({ order }: TOrderCardProps): React.JSX.Element => {
     return sum + ingredient.price;
   }, 0);
 
+  const statusText =
+    order?.status === 'done'
+      ? 'Выполнен'
+      : order?.status === 'create'
+        ? 'Создан'
+        : 'В работе';
+
   return (
     <article className={styles.card} onClick={handleOpenOrderDetail}>
       <div className={styles.cardHead}>
@@ -57,7 +65,12 @@ export const OrderCard = ({ order }: TOrderCardProps): React.JSX.Element => {
         />
       </div>
 
-      <p className="text text_type_main-medium">{order.name}</p>
+      <div>
+        <p className="text text_type_main-medium">{order.name}</p>
+        {status && (
+          <p className="text text_type_main-default green-text">{statusText}</p>
+        )}
+      </div>
 
       <div className={styles.cardFooter}>
         <ul className={styles.cardImages}>

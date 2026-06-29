@@ -22,7 +22,7 @@ export const FeedPage = (): React.JSX.Element => {
             return (
               <li key={item._id}>
                 <Link className={styles.link} to={item._id}>
-                  <OrderCard order={item} />
+                  <OrderCard status={false} order={item} />
                 </Link>
               </li>
             );

@@ -38,7 +38,7 @@ export const routes = createBrowserRouter([
         children: [
           {
             path: '/feed/:id',
-            Component: OrderModal,
+            element: <OrderModal back={'/feed'} />,
           },
         ],
       },
@@ -86,7 +86,8 @@ export const routes = createBrowserRouter([
                 Component: ProfileOrderPage,
                 children: [
                   {
-                    path: 'profile/orders/:id',
+                    element: <OrderModal back={'/profile/orders/'} />,
+                    path: ':id',
                   },
                 ],
               },
