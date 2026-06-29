@@ -1,0 +1,54 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 304px;
+  margin: 0;
+  padding: 0;
+  padding-right: 24px;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.image {
+  position: relative;
+  box-sizing: border-box;
+  width: 64px;
+  height: 64px;
+  margin-right: 16px;
+  padding: 2px;
+  background: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
+  border-radius: 50%;
+}
+
+.image img {
+  width: 100%;
+  height: auto;
+}
+
+.imageBorder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(19 19 22);
+  border-radius: 50%;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}

@@ -8,5 +8,5 @@
 .constructor {
   display: flex;
   justify-content: space-between;
-  height: 100%;
+  height: calc(100vh - 189px);
 }

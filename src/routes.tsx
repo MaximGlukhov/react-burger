@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { App } from './components/app/app';
 import { IngredientModal } from './components/ingredient-modal/ingredient-modal';
+import { OrderModal } from './components/order-modal/order-modal';
 import { ProtectedRoute } from './components/protected-route/protected-route';
 import { ErrorPage } from './pages/error-page/error-page';
 import { FeedPage } from './pages/feed-page/feed-page';
@@ -27,6 +28,17 @@ export const routes = createBrowserRouter([
           {
             path: 'ingredients/:id',
             Component: IngredientModal,
+          },
+        ],
+      },
+
+      {
+        Component: FeedPage,
+        path: 'feed',
+        children: [
+          {
+            path: '/feed/:id',
+            Component: OrderModal,
           },
         ],
       },
@@ -72,15 +84,15 @@ export const routes = createBrowserRouter([
               {
                 path: 'orders',
                 Component: ProfileOrderPage,
+                children: [
+                  {
+                    path: 'profile/orders/:id',
+                  },
+                ],
               },
             ],
           },
         ],
-      },
-
-      {
-        Component: FeedPage,
-        path: 'feed',
       },
     ],
   },

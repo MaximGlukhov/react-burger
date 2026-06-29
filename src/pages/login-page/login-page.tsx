@@ -2,7 +2,11 @@
 import { useDispatch, useSelector } from '@/services/hooks';
 import { useLoginMutation } from '@/services/slices/api/authApi';
 import { getForm, updateForm, type TFormField } from '@/services/slices/login/login';
-import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
+import {
+  Button,
+  EmailInput,
+  PasswordInput,
+} from '@krgaa/react-developer-burger-ui-components';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import type { ChangeEvent, FormEventHandler } from 'react';
@@ -39,15 +43,15 @@ export const LoginPage = (): React.JSX.Element => {
     <section className={styles.section}>
       <h1 className="text text_type_main-medium">Вход</h1>
       <form onSubmit={handleSubmitForm} className={styles.form}>
-        <Input
+        <EmailInput
           name={'email'}
           placeholder={'E-mail'}
           value={form.email}
           onChange={handleUpdateForm}
         />
-        <Input
-          type={'password'}
-          name={'password'}
+        <PasswordInput
+          icon="ShowIcon"
+          name="password"
           placeholder={'Пароль'}
           value={form.password}
           onChange={handleUpdateForm}
