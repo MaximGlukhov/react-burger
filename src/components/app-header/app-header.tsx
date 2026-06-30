@@ -38,9 +38,9 @@ export const AppHeader = (): React.JSX.Element => {
             <p className="text text_type_main-default ml-2">Лента заказов</p>
           </NavLink>
         </div>
-        <div className={styles.logo}>
+        <NavLink to="/" className={styles.logo}>
           <Logo />
-        </div>
+        </NavLink>
         <NavLink
           to="/profile"
           className={({ isActive }) =>

@@ -5,7 +5,12 @@ import {
   updateForm,
   type TFormField,
 } from '@/services/slices/registration/registration-slice';
-import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
+import {
+  Button,
+  EmailInput,
+  Input,
+  PasswordInput,
+} from '@krgaa/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
 
 import type { ChangeEvent, FormEventHandler } from 'react';
@@ -38,16 +43,15 @@ export const RegisterPage = (): React.JSX.Element => {
           value={form.name}
           onChange={handleUpdateForm}
         />
-        <Input
+        <EmailInput
           name={'email'}
           placeholder={'E-mail'}
           value={form.email}
           onChange={handleUpdateForm}
         />
-        <Input
+        <PasswordInput
           name={'password'}
           placeholder={'Пароль'}
-          type={'password'}
           value={form.password}
           onChange={handleUpdateForm}
         />

@@ -5,7 +5,7 @@ import {
   updateForm,
   type TFormField,
 } from '@/services/slices/forgot-password/forgot-password';
-import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
+import { Button, EmailInput } from '@krgaa/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type { ChangeEvent, FormEventHandler } from 'react';
@@ -38,7 +38,7 @@ export const ForgotPasswordPage = (): React.JSX.Element => {
     <section className={styles.section}>
       <h1 className="text text_type_main-medium">Восстановление пароля</h1>
       <form onSubmit={handleSubmitForm} className={styles.form}>
-        <Input
+        <EmailInput
           name={'email'}
           placeholder={'Укажите e-mail'}
           value={form.email}
