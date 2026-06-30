@@ -11,6 +11,7 @@ import {
   setOpenModal,
   setOrderDetail,
 } from '@/services/slices/order-detail/order-detai-slice';
+import { getUser } from '@/services/slices/user/user';
 import {
   CurrencyIcon,
   FormattedDate,
@@ -32,8 +33,13 @@ export const OrderModal = ({ back }: TOrderModalProps): React.JSX.Element | null
   const { id } = useParams();
   const skipOrderId = useRef(true);
 
+  const user = useSelector(getUser);
+  const isAuthorized = user !== null;
+
   const { data: ordersData } = useGetOrdersQuery();
-  const { data: historyOrdersData } = useGetHistoryOrdersQuery();
+  const { data: historyOrdersData } = useGetHistoryOrdersQuery(undefined, {
+    skip: !isAuthorized,
+  });
   const { data: ingredientsData } = useGetIngredientsQuery();
   const { data: orderId, isFetching } = useGetOrderByIdQuery(id ?? '', {
     skip: skipOrderId.current,
@@ -73,42 +79,49 @@ export const OrderModal = ({ back }: TOrderModalProps): React.JSX.Element | null
         : 'В работе';
 
   useEffect(() => {
-    if (id && ordersData && historyOrdersData && ingredientsData && ingredientsMap) {
-      const allOrders: TOrder[] = [
-        ...(ordersData?.orders ?? []),
-        ...(historyOrdersData?.orders ?? []),
-      ];
+    if (
+      !id ||
+      !ordersData ||
+      (!historyOrdersData && isAuthorized) ||
+      !ingredientsData ||
+      !ingredientsMap
+    ) {
+      return;
+    }
+    const allOrders: TOrder[] = [
+      ...(ordersData?.orders ?? []),
+      ...(historyOrdersData?.orders ?? []),
+    ];
 
-      const transformOrder = (item: TOrder): TOrederTransform => {
-        const counts = item.ingredients.reduce(
-          (acc: Record<string, number>, ingredientId: string) => {
-            acc[ingredientId] = (acc[ingredientId] ?? 0) + 1;
-            return acc;
-          },
-          {} as Record<string, number>
-        );
+    const transformOrder = (item: TOrder): TOrederTransform => {
+      const counts = item.ingredients.reduce(
+        (acc: Record<string, number>, ingredientId: string) => {
+          acc[ingredientId] = (acc[ingredientId] ?? 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
-        return {
-          ...item,
-          ingredients: Object.entries(counts).map(([ingredientId, count]) => ({
-            ...(ingredientsMap[ingredientId] ?? {}),
-            count,
-          })),
-        } as TOrederTransform;
-      };
+      return {
+        ...item,
+        ingredients: Object.entries(counts).map(([ingredientId, count]) => ({
+          ...(ingredientsMap[ingredientId] ?? {}),
+          count,
+        })),
+      } as TOrederTransform;
+    };
 
-      const found = allOrders.find((o) => o._id === id);
+    const found = allOrders.find((o) => o._id === id);
 
-      if (found) {
-        dispatch(setOrderDetail(transformOrder(found)));
-        dispatch(setOpenModal(true));
-      } else {
-        dispatch(setOpenModal(true));
-        skipOrderId.current = false;
-        if (orderId) {
-          const transformed = transformOrder(orderId.order);
-          dispatch(setOrderDetail(transformed));
-        }
+    if (found) {
+      dispatch(setOrderDetail(transformOrder(found)));
+      dispatch(setOpenModal(true));
+    } else {
+      dispatch(setOpenModal(true));
+      skipOrderId.current = false;
+      if (orderId) {
+        const transformed = transformOrder(orderId.order);
+        dispatch(setOrderDetail(transformed));
       }
     }
   }, [ordersData, historyOrdersData, skipOrderId]);
