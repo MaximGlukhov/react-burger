@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 24px;
   min-height: 320px;
+  padding-top: 80px;
 }
 
 .footer {

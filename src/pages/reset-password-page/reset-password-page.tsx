@@ -5,7 +5,11 @@ import {
   updateForm,
   type TFormField,
 } from '@/services/slices/reset-password/reset-password';
-import { Button, Input } from '@krgaa/react-developer-burger-ui-components';
+import {
+  Button,
+  Input,
+  PasswordInput,
+} from '@krgaa/react-developer-burger-ui-components';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type { ChangeEvent, FormEventHandler } from 'react';
@@ -38,7 +42,7 @@ export const ResetPasswordPage = (): React.JSX.Element => {
     <section className={styles.section}>
       <h1 className="text text_type_main-medium">Восстановление пароля</h1>
       <form onSubmit={handleSubmitForm} className={styles.form}>
-        <Input
+        <PasswordInput
           name={'password'}
           placeholder={'Введите новый пароль'}
           value={form.password}

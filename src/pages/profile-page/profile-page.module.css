@@ -1,19 +1,20 @@
 .section {
   display: flex;
-  justify-content: center;
   align-items: center;
   height: 100%;
+  padding-top: 40px;
 }
 
 .content {
   display: grid;
-  grid-template-columns: 320px 480px;
+  grid-template-columns: 320px 1fr;
   gap: 60px;
-  max-width: 860px;
+  height: 100%;
 }
 
 .menu {
   height: 100%;
+  padding-top: 80px;
 }
 
 .nav {
