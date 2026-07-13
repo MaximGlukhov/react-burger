@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 
 import { App } from './components/app/app';
 import { IngredientModal } from './components/ingredient-modal/ingredient-modal';
@@ -16,7 +16,7 @@ import { RegisterPage } from './pages/register-page/register-page';
 import { ResetPasswordGuard } from './pages/reset-password-guard/reset-password-guard';
 import { ResetPasswordPage } from './pages/reset-password-page/reset-password-page';
 
-export const routes = createBrowserRouter([
+export const routes = createHashRouter([
   {
     element: <App />,
     errorElement: <ErrorPage />,
