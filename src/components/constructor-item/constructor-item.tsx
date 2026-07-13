@@ -71,6 +71,7 @@ export const ConstructorItem = ({
 
   return (
     <li
+      data-testid={`constructor-item-${ingredient.uniqId}`}
       ref={ref}
       className={styles.item}
       style={{

@@ -40,6 +40,7 @@ export const IngredientCard = ({
     <>
       <Link to={`/ingredients/${_id}`} className={styles.link}>
         <article
+          data-testid={`ingredient-${_id}`}
           ref={dragRef}
           onClick={handleOpenModal}
           className={`${styles.card} p-4`}
