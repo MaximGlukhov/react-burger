@@ -38,3 +38,7 @@
 ```
 
 Работа изначально писалась на TypeScript
+
+- `npm test` - запуск тестов
+
+https://maximglukhov.github.io/react-burger/#/ - Ссылка на проект

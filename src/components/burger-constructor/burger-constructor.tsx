@@ -83,6 +83,7 @@ export const BurgerConstructor = (): React.JSX.Element => {
 
       <section className={`${styles.burger_constructor} ml-10`}>
         <ul
+          data-testid="sortable-list"
           ref={(node) => {
             drop(node);
           }}
